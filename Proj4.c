@@ -94,10 +94,108 @@ int main(void){
     delay_ms(100);
     UART_Init(9600);
     delay_ms(100);
-    ULTR_Init(0,1,0,2);
+    ULTR_Init(0,1,0,2);//Echo A1, Trigger A2
     delay_ms(100);
+    float distance;
+    char msg[80];
+    int ultDist;
     LCD_WriteStringAtPos("Team: 1");
+    while(1){
+        delay_ms(100);
+        ultDist = ULTR_MeasureDist();
+        update_SSD(ultDist);
+        
+        if(SWT_GetValue(0)){
+            distance = (ultDist*13503.9)*0.0000005;
+            if(distance>=0 && distance<2)
+                RGBLED_SetValue(255,0,0);
+            else if(distance>=2 && distance<4)
+                RGBLED_SetValue(255,255,0);
+            else if(distance>=4 && distance<20)
+                RGBLED_SetValue(0,255,0);
+            else
+                RGBLED_SetValue(0,0,255);
+            
+            if(distance<0)
+                LCD_WriteStringAtPos(msg,"Range: %.2f in\n",0);
+            else
+                sprintf(msg,"Range: %.2f in\n", distance);
+        }
+        else{
+            distance=(ultDist*34300)*0.0000005;
+            if(distance>=0 && distance<5)
+                RGBLED_SetValue(255,0,0);
+            else if(distance>=5 && distance<10)
+                RGBLED_SetValue(255,255,0);
+            else if(distance>=10 && distance<50)
+                RGBLED_SetValue(0,255,0);
+            else
+                RGBLED_SetValue(0,0,255);
+            
+            if(distance<0)
+                sprintf(msg,"Range: %.2f cm\n",0);
+            else
+                sprintf(msg,"Range: %.2f cm\n",0);
+        }
+        LCD_WriteStringAtPos(msg,1,0);
+        
+        if(SWT_GetValue(1))
+            UART_PutString(msg);
+    }
     
+}
+
+void update_SSD(int value){
+    int first,second,third,fourth,decPt1,decPt2,decPt3,decPt4;
+    char SSD1 = 0b0000000; //SSD setting for 1st SSD (LSD)
+    char SSD2 = 0b0000000; //SSD setting for 2nd SSD
+    char SSD3 = 0b0000000; //SSD setting for 3rd SSD
+    char SSD4 = 0b0000000; //SSD setting for 4th SSD (MSD)
+    if (value>9999){
+        first=floor(value/10000);
+        second=floor((value%10000)/1000);
+        third=floor((value%1000)/100);
+        fourth=floor((value%100)/10);
+        decPt1=0;
+        decPt2=0;
+        decPt3=1;
+        decPt4=0;
+    }
+    else if (value>999){
+        first=floor((value%10000)/1000);
+        second=floor((value%1000)/100);
+        third=floor((value%100)/10);
+        fourth=floor((value%10));
+        decPt1=0;
+        decPt2=0;
+        decPt3=0;
+        decPt4=1;
+    }
+    else{
+        first=0;
+        second=floor((value%1000)/100);
+        third=floor((value%100)/10);
+        fourth=floor((value%10));
+        decPt1=0;
+        decPt2=0;
+        decPt3=0;
+        decPt4=1;
+    }
+    if(value<0){                          //Display nothing if object is out of range
+        first=18;
+        second=18;
+        third=18;
+        fourth=18;
+        decPt1=0;
+        decPt2=0;
+        decPt3=0;
+        decPt4=0;
+    }
+    SSD4=first;
+    SSD3=second;
+    SSD2=third;
+    SSD1=fourth;
+    SSD_WriteDigits(SSD1, SSD2, SSD3, SSD4,decPt1,decPt2,decPt3,decPt4);
 }
 
 void delay_ms(int ms) {

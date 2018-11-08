@@ -106,7 +106,6 @@ int main(void){
         delay_ms(100);
         ultDist = ULTR_MeasureDist();
         update_SSD(ultDist);
-        
         if(SWT_GetValue(0)){
             distance = (ultDist*13503.9)*0.0000005;
             if(distance>=0 && distance<2)
@@ -119,9 +118,9 @@ int main(void){
                 RGBLED_SetValue(0,0,255);
             
             if(distance<0)
-                sprintf(msg,"Range: %.2f in\n",0);
+                sprintf(msg,"Range: %.2f in\r\n",0);
             else
-                sprintf(msg,"Range: %.2f in\n", distance);
+                sprintf(msg,"Range: %.2f in\r\n", distance);
         }
         else{
             distance=(ultDist*34300)*0.0000005;
@@ -135,9 +134,9 @@ int main(void){
                 RGBLED_SetValue(0,0,255);
             
             if(distance<0)
-                sprintf(msg,"Range: %.2f cm\n",0);
+                sprintf(msg,"Range: %.2f cm\r\n",0);
             else
-                sprintf(msg,"Range: %.2f cm\n",distance);
+                sprintf(msg,"Range: %.2f cm\r\n",distance);
         }
         LCD_WriteStringAtPos(msg,1,0);
         
@@ -181,7 +180,7 @@ void update_SSD(int value) {
 void delay_ms(int ms) {
     int i, counter;
     for (counter = 0; counter < ms; counter++) {
-        for (i = 0; i < 300; i++) {
+        for (i = 0; i < 1300; i++) {
         } //software delay ~1 millisec
     }
 }

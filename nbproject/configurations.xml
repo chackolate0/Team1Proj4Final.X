@@ -12,6 +12,7 @@
       <itemPath>uart.h</itemPath>
       <itemPath>ultr.h</itemPath>
       <itemPath>utils.h</itemPath>
+      <itemPath>pmods.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -28,6 +29,7 @@
       <itemPath>ultr.c</itemPath>
       <itemPath>utils.c</itemPath>
       <itemPath>Proj4.c</itemPath>
+      <itemPath>pmods.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

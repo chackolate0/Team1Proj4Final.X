@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=lcd.c rgbled.c ssd.c swt.c uart.c ultr.c utils.c Proj4.c
+SOURCEFILES_QUOTED_IF_SPACED=lcd.c rgbled.c ssd.c swt.c uart.c ultr.c utils.c Proj4.c pmods.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/lcd.o ${OBJECTDIR}/rgbled.o ${OBJECTDIR}/ssd.o ${OBJECTDIR}/swt.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/ultr.o ${OBJECTDIR}/utils.o ${OBJECTDIR}/Proj4.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/lcd.o.d ${OBJECTDIR}/rgbled.o.d ${OBJECTDIR}/ssd.o.d ${OBJECTDIR}/swt.o.d ${OBJECTDIR}/uart.o.d ${OBJECTDIR}/ultr.o.d ${OBJECTDIR}/utils.o.d ${OBJECTDIR}/Proj4.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/lcd.o ${OBJECTDIR}/rgbled.o ${OBJECTDIR}/ssd.o ${OBJECTDIR}/swt.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/ultr.o ${OBJECTDIR}/utils.o ${OBJECTDIR}/Proj4.o ${OBJECTDIR}/pmods.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/lcd.o.d ${OBJECTDIR}/rgbled.o.d ${OBJECTDIR}/ssd.o.d ${OBJECTDIR}/swt.o.d ${OBJECTDIR}/uart.o.d ${OBJECTDIR}/ultr.o.d ${OBJECTDIR}/utils.o.d ${OBJECTDIR}/Proj4.o.d ${OBJECTDIR}/pmods.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/lcd.o ${OBJECTDIR}/rgbled.o ${OBJECTDIR}/ssd.o ${OBJECTDIR}/swt.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/ultr.o ${OBJECTDIR}/utils.o ${OBJECTDIR}/Proj4.o
+OBJECTFILES=${OBJECTDIR}/lcd.o ${OBJECTDIR}/rgbled.o ${OBJECTDIR}/ssd.o ${OBJECTDIR}/swt.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/ultr.o ${OBJECTDIR}/utils.o ${OBJECTDIR}/Proj4.o ${OBJECTDIR}/pmods.o
 
 # Source Files
-SOURCEFILES=lcd.c rgbled.c ssd.c swt.c uart.c ultr.c utils.c Proj4.c
+SOURCEFILES=lcd.c rgbled.c ssd.c swt.c uart.c ultr.c utils.c Proj4.c pmods.c
 
 
 CFLAGS=
@@ -154,6 +154,12 @@ ${OBJECTDIR}/Proj4.o: Proj4.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/Proj4.o 
 	@${FIXDEPS} "${OBJECTDIR}/Proj4.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Proj4.o.d" -o ${OBJECTDIR}/Proj4.o Proj4.c    -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD) 
 	
+${OBJECTDIR}/pmods.o: pmods.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/pmods.o.d 
+	@${RM} ${OBJECTDIR}/pmods.o 
+	@${FIXDEPS} "${OBJECTDIR}/pmods.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/pmods.o.d" -o ${OBJECTDIR}/pmods.o pmods.c    -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD) 
+	
 else
 ${OBJECTDIR}/lcd.o: lcd.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -202,6 +208,12 @@ ${OBJECTDIR}/Proj4.o: Proj4.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/Proj4.o.d 
 	@${RM} ${OBJECTDIR}/Proj4.o 
 	@${FIXDEPS} "${OBJECTDIR}/Proj4.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Proj4.o.d" -o ${OBJECTDIR}/Proj4.o Proj4.c    -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/pmods.o: pmods.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/pmods.o.d 
+	@${RM} ${OBJECTDIR}/pmods.o 
+	@${FIXDEPS} "${OBJECTDIR}/pmods.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/pmods.o.d" -o ${OBJECTDIR}/pmods.o pmods.c    -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD) 
 	
 endif
 

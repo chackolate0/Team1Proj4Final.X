@@ -76,12 +76,14 @@
 #include "uart.h"
 #include "ultr.h"
 #include "utils.h"
+#include "srv.h"
 
 /* TODO:  Include other files here if needed. */
 
 void delay_ms(int ms);
 
-int main(void){
+main(void){
+    
     BTN_Init();
     delay_ms(100);
     LCD_Init();
@@ -96,53 +98,14 @@ int main(void){
     delay_ms(100);
     ULTR_Init(0,1,0,2);//Echo A1, Trigger A2
     delay_ms(100);
-    float distance;
-    char msg[80];
-    int ultDist;
-    LCD_WriteStringAtPos("Team: 1");
+    SRV_Init();
+    delay_ms(100);
+    ADC_Init();
+    LCD_WriteStringAtPos("Team: 1", 0, 0);
     while(1){
-        delay_ms(100);
-        ultDist = ULTR_MeasureDist();
-        update_SSD(ultDist);
-        
-        if(SWT_GetValue(0)){
-            distance = (ultDist*13503.9)*0.0000005;
-            if(distance>=0 && distance<2)
-                RGBLED_SetValue(255,0,0);
-            else if(distance>=2 && distance<4)
-                RGBLED_SetValue(255,255,0);
-            else if(distance>=4 && distance<20)
-                RGBLED_SetValue(0,255,0);
-            else
-                RGBLED_SetValue(0,0,255);
-            
-            if(distance<0)
-                LCD_WriteStringAtPos(msg,"Range: %.2f in\n",0);
-            else
-                sprintf(msg,"Range: %.2f in\n", distance);
-        }
-        else{
-            distance=(ultDist*34300)*0.0000005;
-            if(distance>=0 && distance<5)
-                RGBLED_SetValue(255,0,0);
-            else if(distance>=5 && distance<10)
-                RGBLED_SetValue(255,255,0);
-            else if(distance>=10 && distance<50)
-                RGBLED_SetValue(0,255,0);
-            else
-                RGBLED_SetValue(0,0,255);
-            
-            if(distance<0)
-                sprintf(msg,"Range: %.2f cm\n",0);
-            else
-                sprintf(msg,"Range: %.2f cm\n",0);
-        }
-        LCD_WriteStringAtPos(msg,1,0);
-        
-        if(SWT_GetValue(1))
-            UART_PutString(msg);
+        SRV_GetPulse(0,4);
+        SRV_SetPulseMicroseconds0(1500);
     }
-    
 }
 
 void update_SSD(int value){

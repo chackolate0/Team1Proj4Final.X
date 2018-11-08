@@ -13,6 +13,9 @@
       <itemPath>ultr.h</itemPath>
       <itemPath>utils.h</itemPath>
       <itemPath>pmods.h</itemPath>
+      <itemPath>srv.h</itemPath>
+      <itemPath>btn.h</itemPath>
+      <itemPath>adc.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -30,6 +33,9 @@
       <itemPath>utils.c</itemPath>
       <itemPath>Proj4.c</itemPath>
       <itemPath>pmods.c</itemPath>
+      <itemPath>srv.c</itemPath>
+      <itemPath>btn.c</itemPath>
+      <itemPath>adc.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -209,6 +215,9 @@
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
+      <PK3OBPlatformTool>
+        <property key="firmware.download.all" value="false"/>
+      </PK3OBPlatformTool>
     </conf>
   </confs>
 </configurationDescriptor>

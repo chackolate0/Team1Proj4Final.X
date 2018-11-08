@@ -32,10 +32,10 @@
 #pragma config FPLLODIV = DIV_1       // System PLL Output Clock Divider (PLL Divide by 256)
 
 // DEVCFG1
-#pragma config FNOSC = FRCDIV           // Oscillator Selection Bits (Fast RC Osc w/Div-by-N (FRCDIV))
-#pragma config FSOSCEN = ON             // Secondary Oscillator Enable (Enabled)
+#pragma config FNOSC = PRIPLL           // Oscillator Selection Bits (Fast RC Osc w/Div-by-N (FRCDIV))
+#pragma config FSOSCEN = OFF             // Secondary Oscillator Enable (Enabled)
 #pragma config IESO = ON                // Internal/External Switch Over (Enabled)
-#pragma config POSCMOD = OFF            // Primary Oscillator Configuration (Primary osc disabled)
+#pragma config POSCMOD = XT            // Primary Oscillator Configuration (Primary osc disabled)
 #pragma config OSCIOFNC = OFF           // CLKO Output Signal Active on the OSCO Pin (Disabled)
 #pragma config FPBDIV = DIV_2           // Peripheral Clock Divisor (Pb_Clk is Sys_Clk/2)
 #pragma config FCKSM = CSDCMD           // Clock Switching and Monitor Selection (Clock Switch Disable, FSCM Disabled)
@@ -46,7 +46,7 @@
 
 // DEVCFG0
 #pragma config DEBUG = OFF              // Background Debugger Enable (Debugger is Disabled)
-#pragma config JTAGEN = ON              // JTAG Enable (JTAG Port Enabled)
+#pragma config JTAGEN = OFF              // JTAG Enable (JTAG Port Enabled)
 #pragma config ICESEL = ICS_PGx1        // ICE/ICD Comm Channel Select (Communicate on PGEC1/PGED1)
 #pragma config PWP = OFF                // Program Flash Write Protect (Disable)
 #pragma config BWP = OFF                // Boot Flash Write Protect bit (Protection Disabled)
@@ -72,6 +72,7 @@
 #include <math.h>
 #include "rgbled.h"
 #include "ssd.h"
+#include <stdio.h>
 #include "swt.h"
 #include "uart.h"
 #include "ultr.h"
@@ -80,6 +81,7 @@
 /* TODO:  Include other files here if needed. */
 
 void delay_ms(int ms);
+void update_SSD(int value);
 
 int main(void){
     BTN_Init();
@@ -99,7 +101,7 @@ int main(void){
     float distance;
     char msg[80];
     int ultDist;
-    LCD_WriteStringAtPos("Team: 1");
+    LCD_WriteStringAtPos("Team: 1",0,0);
     while(1){
         delay_ms(100);
         ultDist = ULTR_MeasureDist();
@@ -117,7 +119,7 @@ int main(void){
                 RGBLED_SetValue(0,0,255);
             
             if(distance<0)
-                LCD_WriteStringAtPos(msg,"Range: %.2f in\n",0);
+                sprintf(msg,"Range: %.2f in\n",0);
             else
                 sprintf(msg,"Range: %.2f in\n", distance);
         }
@@ -135,7 +137,7 @@ int main(void){
             if(distance<0)
                 sprintf(msg,"Range: %.2f cm\n",0);
             else
-                sprintf(msg,"Range: %.2f cm\n",0);
+                sprintf(msg,"Range: %.2f cm\n",distance);
         }
         LCD_WriteStringAtPos(msg,1,0);
         
@@ -145,57 +147,35 @@ int main(void){
     
 }
 
-void update_SSD(int value){
-    int first,second,third,fourth,decPt1,decPt2,decPt3,decPt4;
+void update_SSD(int value) {
+    int hunds, tens, ones, tenths;
+    int dec1, dec2;
     char SSD1 = 0b0000000; //SSD setting for 1st SSD (LSD)
     char SSD2 = 0b0000000; //SSD setting for 2nd SSD
     char SSD3 = 0b0000000; //SSD setting for 3rd SSD
     char SSD4 = 0b0000000; //SSD setting for 4th SSD (MSD)
-    if (value>9999){
-        first=floor(value/10000);
-        second=floor((value%10000)/1000);
-        third=floor((value%1000)/100);
-        fourth=floor((value%100)/10);
-        decPt1=0;
-        decPt2=0;
-        decPt3=1;
-        decPt4=0;
+    if (value < 0) {
+        SSD4 = 17;
+        value = -1 * value;
+        dec1 = 0;
+        dec2 = 1;
+    } else {
+        dec1 = 1;
+        dec2 = 0;
+        hunds = floor(value / 1000);
+        if (hunds > 0)
+            SSD4 = hunds; //SSD4 = display_char[thous];
+        else
+            SSD4 = 0;
     }
-    else if (value>999){
-        first=floor((value%10000)/1000);
-        second=floor((value%1000)/100);
-        third=floor((value%100)/10);
-        fourth=floor((value%10));
-        decPt1=0;
-        decPt2=0;
-        decPt3=0;
-        decPt4=1;
-    }
-    else{
-        first=0;
-        second=floor((value%1000)/100);
-        third=floor((value%100)/10);
-        fourth=floor((value%10));
-        decPt1=0;
-        decPt2=0;
-        decPt3=0;
-        decPt4=1;
-    }
-    if(value<0){                          //Display nothing if object is out of range
-        first=18;
-        second=18;
-        third=18;
-        fourth=18;
-        decPt1=0;
-        decPt2=0;
-        decPt3=0;
-        decPt4=0;
-    }
-    SSD4=first;
-    SSD3=second;
-    SSD2=third;
-    SSD1=fourth;
-    SSD_WriteDigits(SSD1, SSD2, SSD3, SSD4,decPt1,decPt2,decPt3,decPt4);
+    tens = floor((value % 1000) / 100);
+    if (hunds == 0 && tens == 0)
+        SSD3 = 0;
+    else
+        SSD3 = tens;
+    SSD2 = ones = floor(value % 100 / 10);
+    SSD1 = tenths = floor(value % 10);
+    SSD_WriteDigits(SSD1, SSD2, SSD3, SSD4, 0, 0, dec2, dec1);
 }
 
 void delay_ms(int ms) {

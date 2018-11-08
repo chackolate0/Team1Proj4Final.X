@@ -77,6 +77,7 @@
 #include "ultr.h"
 #include "utils.h"
 #include "srv.h"
+#include <stdio.h>
 
 /* TODO:  Include other files here if needed. */
 
@@ -101,9 +102,12 @@ main(void){
     SRV_Init();
     delay_ms(100);
     ADC_Init();
+    
+    char servo[80];
     LCD_WriteStringAtPos("Team: 1", 0, 0);
     while(1){
-        SRV_GetPulse(0,4);
+        sprintf(servo,"%d",SRV_GetPulse(0,4));
+        LCD_WriteStringAtPos(servo,1,0);
         SRV_SetPulseMicroseconds0(1500);
     }
 }

@@ -90,7 +90,7 @@ int main(void){
     delay_ms(100);
     LCD_Init();
     delay_ms(100);
-    //RGBLED_Init();
+    RGBLED_Init();
     delay_ms(100);
     SSD_Init();
     delay_ms(100);

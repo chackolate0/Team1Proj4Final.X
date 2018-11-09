@@ -1,152 +1,155 @@
-/* ************************************************************************** */
-/** Descriptive File Name
-
-  @Company
- CPEG 222 Team 1
- * Alex Chacko & Matias Saavedra
-
-  @File Name
- Proj4.c
-
-  @Summary
-    Brief description of the file.
-
-  @Description
- Project 4 Final Stage
- */
-
-
-// PIC32MX370F512L Configuration Bit Settings
-
-// 'C' source line config statements
-
-// DEVCFG3
-// USERID = No Setting
-#pragma config FSRSSEL = PRIORITY_7     // Shadow Register Set Priority Select (SRS Priority 7)
-#pragma config PMDL1WAY = ON            // Peripheral Module Disable Configuration (Allow only one reconfiguration)
-#pragma config IOL1WAY = ON             // Peripheral Pin Select Configuration (Allow only one reconfiguration)
-
-// DEVCFG2
-#pragma config FPLLIDIV = DIV_2        // PLL Input Divider (12x Divider)
-#pragma config FPLLMUL = MUL_20         // PLL Multiplier (24x Multiplier)
-#pragma config FPLLODIV = DIV_1       // System PLL Output Clock Divider (PLL Divide by 256)
-
-// DEVCFG1
-#pragma config FNOSC = PRIPLL           // Oscillator Selection Bits (Fast RC Osc w/Div-by-N (FRCDIV))
-#pragma config FSOSCEN = OFF             // Secondary Oscillator Enable (Enabled)
-#pragma config IESO = ON                // Internal/External Switch Over (Enabled)
-#pragma config POSCMOD = XT            // Primary Oscillator Configuration (Primary osc disabled)
-#pragma config OSCIOFNC = OFF           // CLKO Output Signal Active on the OSCO Pin (Disabled)
-#pragma config FPBDIV = DIV_2           // Peripheral Clock Divisor (Pb_Clk is Sys_Clk/2)
-#pragma config FCKSM = CSDCMD           // Clock Switching and Monitor Selection (Clock Switch Disable, FSCM Disabled)
-#pragma config WDTPS = PS1048576        // Watchdog Timer Postscaler (1:1048576)
-#pragma config WINDIS = OFF             // Watchdog Timer Window Enable (Watchdog Timer is in Non-Window Mode)
-#pragma config FWDTEN = ON              // Watchdog Timer Enable (WDT Enabled)
-#pragma config FWDTWINSZ = WINSZ_25     // Watchdog Timer Window Size (Window Size is 25%)
-
-// DEVCFG0
-#pragma config DEBUG = OFF              // Background Debugger Enable (Debugger is Disabled)
-#pragma config JTAGEN = OFF              // JTAG Enable (JTAG Port Enabled)
-#pragma config ICESEL = ICS_PGx1        // ICE/ICD Comm Channel Select (Communicate on PGEC1/PGED1)
-#pragma config PWP = OFF                // Program Flash Write Protect (Disable)
-#pragma config BWP = OFF                // Boot Flash Write Protect bit (Protection Disabled)
-#pragma config CP = OFF                 // Code Protect (Protection Disabled)
-
-// #pragma config statements should precede project file includes.
-// Use project enums instead of #define for ON and OFF.
-
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/* This section lists the other files that are included in this file.
- */
-#include <xc.h>
-#include "adc.h"
-#include "btn.h"
-#include "config.h"
-#include "lcd.h"
-#include <math.h>
-#include "rgbled.h"
-#include "srv.h"
-#include "ssd.h"
 #include <stdio.h>
-#include "swt.h"
-#include "uart.h"
-#include "ultr.h"
+#include <stdlib.h>
+#include <math.h>
+#include <plib.h>
+#include <xc.h>
+//Include all needed libraries
+#include "adc.h"
+#include "config.h"
+#include "lcd.h"   
+//#include "led.h"  
+#include "rgbled.h"
 #include "utils.h"
+#include "uart.h"
+#include "btn.h"
+#include "ssd.h"
+#include "swt.h"
+#include "pmods.h"
+#include "ultr.h"
 
-/* TODO:  Include other files here if needed. */
+#pragma config JTAGEN = OFF     // Turn off JTAG - required to use Pin RA0 as IO
+#pragma config FNOSC = PRIPLL   //configure system clock 80 MHz
+#pragma config FSOSCEN = OFF    // Secondary Oscillator Enable (Disabled)
+#pragma config POSCMOD = XT     // Primary Oscillator Configuration (XT osc mode)
+#pragma config FPLLIDIV = DIV_2
+#pragma config FPLLMUL = MUL_20
+#pragma config FPLLODIV = DIV_1
+#pragma config FPBDIV = DIV_2   //configure peripheral bus clock to 40 MHz
 
-void delay_ms(int ms);
+#define SYS_FREQ        (80000000L)     // 80MHz system clock (PB clock = 40MHz)
+#define INT_SEC         10              // interrupt at 10th of a second
+#define CORE_TICK_RATE  (SYS_FREQ/2/INT_SEC) //Using CoreTimer for 10th of a sec
+#define Min_ms          20             //minimum update/shift time in ms
+#define Max_ms          2000            //maximum update/shift time in ms
+
+#define _SUPPRESS_PLIB_WARNING
+_SUPPRESS_PLIB_WARNING
+
+int angle;
+int dutyCycle;
+int stepSize = 2;
+char displayText[80];
+int btnlck = 0;
+int turnClockwise = 0;
+
+int clockwise = 1600;
+int counterCwise = 1400;
+
+int ultDist;
+float distance;
+char msg[80];
+
+void findAngle(){
+    dutyCycle = SRV_GetPulse(1,1);
+    angle=(int)(((dutyCycle-29) * 360)/(971-29+1));
+}
+
+void findAngle();
+//void delay_ms(int ms);
 void update_SSD(int value);
+void readUltr();
 
 int main(void){
     BTN_Init();
-    delay_ms(100);
-    LCD_Init();
-    delay_ms(100);
-    RGBLED_Init();
-    delay_ms(100);
-    SSD_Init();
-    delay_ms(100);
     SWT_Init();
-    delay_ms(100);
-    UART_Init(9600);
-    delay_ms(100);
-    ULTR_Init(0,1,0,2);//Echo A1, Trigger A2
-    delay_ms(100);
-    float distance;
-    char msg[80];
-    int ultDist;
-    LCD_WriteStringAtPos("Team: 1",0,0);
-    while(1){
-        delay_ms(100);
-        ultDist = ULTR_MeasureDist();
-        update_SSD(ultDist);
-        SRV_SetPulseMicroseconds0(1500);
-        if(SWT_GetValue(0)){
-            distance = (ultDist*13503.9)*0.0000005;
-            if(distance>=0 && distance<2)
-                RGBLED_SetValue(255,0,0);
-            else if(distance>=2 && distance<4)
-                RGBLED_SetValue(255,255,0);
-            else if(distance>=4 && distance<20)
-                RGBLED_SetValue(0,255,0);
-            else
-                RGBLED_SetValue(0,0,255);
-            
-            if(distance<0)
-                sprintf(msg,"Range: %.2f in\r\n",0);
-            else
-                sprintf(msg,"Range: %.2f in\r\n", distance);
-        }
-        else{
-            distance=(ultDist*34300)*0.0000005;
-            if(distance>=0 && distance<5)
-                RGBLED_SetValue(255,0,0);
-            else if(distance>=5 && distance<10)
-                RGBLED_SetValue(255,255,0);
-            else if(distance>=10 && distance<50)
-                RGBLED_SetValue(0,255,0);
-            else
-                RGBLED_SetValue(0,0,255);
-            
-            if(distance<0)
-                sprintf(msg,"Range: %.2f cm\r\n",0);
-            else
-                sprintf(msg,"Range: %.2f cm\r\n",distance);
-        }
-        LCD_WriteStringAtPos(msg,1,0);
-        
-        if(SWT_GetValue(1))
-            UART_PutString(msg);
-    }
+    SRV_Init();
+    LCD_Init();
+    RGBLED_Init();
+    ULTR_Init(0,1,0,2);
+    SSD_Init();  
     
+    SRV_SetPulseMicroseconds1(1500);
+    while(angle != 90){
+            findAngle();
+            SRV_SetPulseMicroseconds1(1700);
+        }
+    while(1){
+        sprintf(displayText,"Tm:%2d,Step:%2ddeg", 1, stepSize);
+        LCD_WriteStringAtPos(displayText, 0, 0);
+        if(SWT_GetValue(7)){
+            findAngle();
+            if(!turnClockwise){
+                if(angle % stepSize < 1){
+                    SRV_SetPulseMicroseconds1(1500);
+                    //start
+                    readUltr();
+                    //end
+                    SRV_SetPulseMicroseconds1(clockwise);
+                    delay_ms(100);
+                    findAngle();
+                }
+                SRV_SetPulseMicroseconds1(clockwise);
+            }
+            else{
+                if(angle % stepSize < 1){
+                    SRV_SetPulseMicroseconds1(1500);
+                    //start
+                    readUltr();
+                    //end
+                    SRV_SetPulseMicroseconds1(counterCwise);
+                    findAngle();
+                }
+                 SRV_SetPulseMicroseconds1(counterCwise);
+            }
+            if(angle < 95 && angle > 88){
+                SRV_SetPulseMicroseconds1(clockwise);
+                turnClockwise = 0;
+            }
+            if(angle < 275 && angle > 268){
+                SRV_SetPulseMicroseconds1(counterCwise);
+                turnClockwise = 1;
+            }
+        }
+        else {
+            SRV_SetPulseMicroseconds1(1500);
+        }
+        
+        if(BTN_GetValue('U') && !btnlck){
+            btnlck = 1;
+            if(stepSize < 20){
+                if(stepSize == 2){
+                    stepSize = 5;
+                }
+                else {
+                    stepSize *=2;
+                }
+            }
+        }
+        
+        if(BTN_GetValue('C') && !btnlck){
+            btnlck = 1;
+            if(stepSize > 2){
+                if(stepSize == 5){
+                    stepSize = 2;
+                }
+                else {
+                    stepSize /=2;
+                }
+            }
+        }
+        
+        if(!BTN_GetValue('U') && !BTN_GetValue('C')){
+            btnlck = 0;
+        }
+    }
+}
+
+void delay_ms(int ms) {
+    int i, counter;
+    for (counter = 0; counter < ms; counter++) {
+        for (i = 0; i < 300; i++) {
+        } //software delay ~1 millisec 
+    }
 }
 
 void update_SSD(int value) {
@@ -180,10 +183,44 @@ void update_SSD(int value) {
     SSD_WriteDigits(SSD1, SSD2, SSD3, SSD4, 0, 0, dec2, dec1);
 }
 
-void delay_ms(int ms) {
-    int i, counter;
-    for (counter = 0; counter < ms; counter++) {
-        for (i = 0; i < 1300; i++) {
-        } //software delay ~1 millisec
-    }
+
+void readUltr(){
+	ultDist = ULTR_MeasureDist();
+	update_SSD(ultDist);
+	if(SWT_GetValue(0)){
+		distance = (ultDist*13503.9)*0.0000005;
+		if(distance>=0 && distance<2)
+			RGBLED_SetValue(255,0,0);
+		else if(distance>=2 && distance<4)
+			RGBLED_SetValue(255,255,0);
+		else if(distance>=4 && distance<20)
+			RGBLED_SetValue(0,255,0);
+		else
+			RGBLED_SetValue(0,0,255);
+		
+		if(distance<0)
+			sprintf(msg,"Range: %.2f in\r\n",0);
+		else
+			sprintf(msg,"Range: %.2f in\r\n", distance);
+	}
+	else{
+		distance=(ultDist*34300)*0.0000005;
+		if(distance>=0 && distance<5)
+			RGBLED_SetValue(255,0,0);
+		else if(distance>=5 && distance<10)
+			RGBLED_SetValue(255,255,0);
+		else if(distance>=10 && distance<50)
+			RGBLED_SetValue(0,255,0);
+		else
+			RGBLED_SetValue(0,0,255);
+		
+		if(distance<0)
+			sprintf(msg,"Range: %.2f cm\r\n",0);
+		else
+			sprintf(msg,"Range: %.2f cm\r\n",distance);
+	}
+	LCD_WriteStringAtPos(msg,1,0);
+	
+	if(SWT_GetValue(1))
+		UART_PutString(msg);
 }

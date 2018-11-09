@@ -66,11 +66,13 @@
 /* This section lists the other files that are included in this file.
  */
 #include <xc.h>
+#include "adc.h"
 #include "btn.h"
 #include "config.h"
 #include "lcd.h"
 #include <math.h>
 #include "rgbled.h"
+#include "srv.h"
 #include "ssd.h"
 #include <stdio.h>
 #include "swt.h"
@@ -88,7 +90,7 @@ int main(void){
     delay_ms(100);
     LCD_Init();
     delay_ms(100);
-    RGBLED_Init();
+    //RGBLED_Init();
     delay_ms(100);
     SSD_Init();
     delay_ms(100);
@@ -106,6 +108,7 @@ int main(void){
         delay_ms(100);
         ultDist = ULTR_MeasureDist();
         update_SSD(ultDist);
+        SRV_SetPulseMicroseconds0(1500);
         if(SWT_GetValue(0)){
             distance = (ultDist*13503.9)*0.0000005;
             if(distance>=0 && distance<2)

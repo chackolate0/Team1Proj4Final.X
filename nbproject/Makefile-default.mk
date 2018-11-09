@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=lcd.c rgbled.c ssd.c swt.c uart.c ultr.c utils.c Proj4.c pmods.c btn.c
+SOURCEFILES_QUOTED_IF_SPACED=lcd.c rgbled.c ssd.c swt.c uart.c ultr.c utils.c Proj4.c pmods.c srv.c btn.c adc.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/lcd.o ${OBJECTDIR}/rgbled.o ${OBJECTDIR}/ssd.o ${OBJECTDIR}/swt.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/ultr.o ${OBJECTDIR}/utils.o ${OBJECTDIR}/Proj4.o ${OBJECTDIR}/pmods.o ${OBJECTDIR}/btn.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/lcd.o.d ${OBJECTDIR}/rgbled.o.d ${OBJECTDIR}/ssd.o.d ${OBJECTDIR}/swt.o.d ${OBJECTDIR}/uart.o.d ${OBJECTDIR}/ultr.o.d ${OBJECTDIR}/utils.o.d ${OBJECTDIR}/Proj4.o.d ${OBJECTDIR}/pmods.o.d ${OBJECTDIR}/btn.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/lcd.o ${OBJECTDIR}/rgbled.o ${OBJECTDIR}/ssd.o ${OBJECTDIR}/swt.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/ultr.o ${OBJECTDIR}/utils.o ${OBJECTDIR}/Proj4.o ${OBJECTDIR}/pmods.o ${OBJECTDIR}/srv.o ${OBJECTDIR}/btn.o ${OBJECTDIR}/adc.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/lcd.o.d ${OBJECTDIR}/rgbled.o.d ${OBJECTDIR}/ssd.o.d ${OBJECTDIR}/swt.o.d ${OBJECTDIR}/uart.o.d ${OBJECTDIR}/ultr.o.d ${OBJECTDIR}/utils.o.d ${OBJECTDIR}/Proj4.o.d ${OBJECTDIR}/pmods.o.d ${OBJECTDIR}/srv.o.d ${OBJECTDIR}/btn.o.d ${OBJECTDIR}/adc.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/lcd.o ${OBJECTDIR}/rgbled.o ${OBJECTDIR}/ssd.o ${OBJECTDIR}/swt.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/ultr.o ${OBJECTDIR}/utils.o ${OBJECTDIR}/Proj4.o ${OBJECTDIR}/pmods.o ${OBJECTDIR}/btn.o
+OBJECTFILES=${OBJECTDIR}/lcd.o ${OBJECTDIR}/rgbled.o ${OBJECTDIR}/ssd.o ${OBJECTDIR}/swt.o ${OBJECTDIR}/uart.o ${OBJECTDIR}/ultr.o ${OBJECTDIR}/utils.o ${OBJECTDIR}/Proj4.o ${OBJECTDIR}/pmods.o ${OBJECTDIR}/srv.o ${OBJECTDIR}/btn.o ${OBJECTDIR}/adc.o
 
 # Source Files
-SOURCEFILES=lcd.c rgbled.c ssd.c swt.c uart.c ultr.c utils.c Proj4.c pmods.c btn.c
+SOURCEFILES=lcd.c rgbled.c ssd.c swt.c uart.c ultr.c utils.c Proj4.c pmods.c srv.c btn.c adc.c
 
 
 CFLAGS=
@@ -160,11 +160,23 @@ ${OBJECTDIR}/pmods.o: pmods.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/pmods.o 
 	@${FIXDEPS} "${OBJECTDIR}/pmods.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/pmods.o.d" -o ${OBJECTDIR}/pmods.o pmods.c    -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD) 
 	
+${OBJECTDIR}/srv.o: srv.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/srv.o.d 
+	@${RM} ${OBJECTDIR}/srv.o 
+	@${FIXDEPS} "${OBJECTDIR}/srv.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/srv.o.d" -o ${OBJECTDIR}/srv.o srv.c    -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD) 
+	
 ${OBJECTDIR}/btn.o: btn.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/btn.o.d 
 	@${RM} ${OBJECTDIR}/btn.o 
 	@${FIXDEPS} "${OBJECTDIR}/btn.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/btn.o.d" -o ${OBJECTDIR}/btn.o btn.c    -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/adc.o: adc.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/adc.o.d 
+	@${RM} ${OBJECTDIR}/adc.o 
+	@${FIXDEPS} "${OBJECTDIR}/adc.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/adc.o.d" -o ${OBJECTDIR}/adc.o adc.c    -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD) 
 	
 else
 ${OBJECTDIR}/lcd.o: lcd.c  nbproject/Makefile-${CND_CONF}.mk
@@ -221,11 +233,23 @@ ${OBJECTDIR}/pmods.o: pmods.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/pmods.o 
 	@${FIXDEPS} "${OBJECTDIR}/pmods.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/pmods.o.d" -o ${OBJECTDIR}/pmods.o pmods.c    -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD) 
 	
+${OBJECTDIR}/srv.o: srv.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/srv.o.d 
+	@${RM} ${OBJECTDIR}/srv.o 
+	@${FIXDEPS} "${OBJECTDIR}/srv.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/srv.o.d" -o ${OBJECTDIR}/srv.o srv.c    -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD) 
+	
 ${OBJECTDIR}/btn.o: btn.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/btn.o.d 
 	@${RM} ${OBJECTDIR}/btn.o 
 	@${FIXDEPS} "${OBJECTDIR}/btn.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/btn.o.d" -o ${OBJECTDIR}/btn.o btn.c    -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD) 
+	
+${OBJECTDIR}/adc.o: adc.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/adc.o.d 
+	@${RM} ${OBJECTDIR}/adc.o 
+	@${FIXDEPS} "${OBJECTDIR}/adc.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/adc.o.d" -o ${OBJECTDIR}/adc.o adc.c    -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD) 
 	
 endif
 

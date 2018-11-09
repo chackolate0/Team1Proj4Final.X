@@ -1,12 +1,13 @@
 build/default/production/Proj4.o:  \
 Proj4.c  \
-btn.h  \
+adc.h  \
 config.h  \
 lcd.h  \
 rgbled.h  \
- ssd.h  \
-swt.h  \
+ utils.h  \
 uart.h  \
-ultr.h  \
-utils.h  \
-srv.h 
+btn.h  \
+ssd.h  \
+swt.h  \
+pmods.h  \
+ultr.h 
